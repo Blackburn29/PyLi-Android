@@ -31,7 +31,7 @@ public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String[] columns = {_ID, COLUMN_HOST};
-        String[] attr = {"INTEGER PRIMARY KEY", ""};
+        String[] attr = {"INTEGER PRIMARY KEY", "STRING"};
             String stmt = this.createTableStatement(TABLE_NAME, columns, attr);
             Log.d(MainActivity.TAG, stmt);
             db.execSQL(stmt);
@@ -46,7 +46,6 @@ public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
     public boolean addConnection(Connection c) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(_ID, c.getId());
         values.put(COLUMN_HOST, c.getHost());
 
         return db.insert(TABLE_NAME, null, values) > 0 ? true : false;
@@ -92,7 +91,7 @@ public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
         for(int i = 0; i < columns.length; i++) {
             sql += columns[i] + " " + attributes[i];
 
-            if (i < columns.length) {
+            if (i < columns.length - 1) {
                 sql += ", ";
             }
         }

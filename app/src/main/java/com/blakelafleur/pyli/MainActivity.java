@@ -1,5 +1,6 @@
 package com.blakelafleur.pyli;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -7,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,14 +20,15 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, BasicColorSettingFragment.OnFragmentInteractionListener {
 
     public static final String TAG = "PyLi";
+    public static final int REQUEST_CODE = 0;
 
     private ViewPager mViewPager;
-    private ConnectionStorage mConnections;
+    private static ConnectionStorage mConnections;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mConnections = new ConnectionStorage(this.getApplicationContext());
+        mConnections = new ConnectionStorage(this.getApplicationContext());
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,10 +45,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         this.mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(this);
 
-        if (this.getConnections().size() < 1) {
-            Intent intent = new Intent(this, ConnectionHelperActivity.class);
-            startActivity(intent);
-        }
+        openConnectionList();
+    }
+
+    private void openConnectionList() {
+        Intent intent = new Intent(this, ConnectionHelperActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     /**
@@ -54,17 +59,33 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
      * @return ArrayList<Connection>
      */
     public ArrayList<Connection> getConnections() {
-        return this.mConnections.listConnections();
+        return mConnections.listConnections();
     }
+
+    public static ConnectionStorage getConnectionStorage() { return mConnections; }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.connections:
+                openConnectionList();
+                break;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        String host = intent.getStringExtra("host");
+        Log.d(TAG, "Got "+host+" back from connection helper");
     }
 
     @Override
