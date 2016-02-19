@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,7 +99,6 @@ public class FadeColorSettingFragment extends Fragment implements SeekBar.OnSeek
             float speed = getSpeed(speedBar.getProgress());
 
             FadeOperation op = new FadeOperation(pos, speed, hsv[0], hsv[1], hsv[2]);
-            Log.d(MainActivity.TAG, op.toJSON().toString());
             new BasicHttpSender(view).send(String.format("http://%s%s", MainActivity.getActiveConnection().getHost(), API_URL), op.toJSON());
         }
     }

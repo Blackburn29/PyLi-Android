@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,6 @@ import com.blakelafleur.pyli.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
 import com.larswerkman.holocolorpicker.SVBar;
-
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,9 +92,7 @@ public class BasicColorSettingFragment extends Fragment implements PageFragmentI
             }
             int pos = ledStripAdapter.getPosition(ledStripLabels[i]);
 
-            Log.d(MainActivity.TAG, Arrays.toString(hsv));
             SetOperation op = new SetOperation(pos, hsv[0], hsv[1], hsv[2]);
-            Log.d(MainActivity.TAG, op.toJSON().toString());
             new BasicHttpSender(view).send(String.format("http://%s%s", MainActivity.getActiveConnection().getHost(), API_URL), op.toJSON());
         }
     }
