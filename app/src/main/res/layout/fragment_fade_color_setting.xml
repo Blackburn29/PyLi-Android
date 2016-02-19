@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
     android:orientation="vertical"
-    tools:context=".Fragments.BasicColorSettingFragment">
+    tools:context=".Fragments.FadeColorSettingFragment">+
 
     <TextView
         android:layout_width="fill_parent"
@@ -20,6 +20,27 @@
         android:choiceMode="multipleChoice" />
 
     <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/speed_label"
+        android:textSize="20sp" />
+
+    <GridLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="2">
+
+        <SeekBar
+            android:id="@+id/speed_bar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:max="2000" />
+
+        <TextView android:id="@+id/speed_label" />
+    </GridLayout>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/color_picker_label"
@@ -28,7 +49,7 @@
     <com.larswerkman.holocolorpicker.ColorPicker
         android:id="@+id/picker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_gravity="center" />
 
     <com.larswerkman.holocolorpicker.SVBar

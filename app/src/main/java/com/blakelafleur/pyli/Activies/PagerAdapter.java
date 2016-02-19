@@ -1,12 +1,13 @@
-package com.blakelafleur.pyli;
+package com.blakelafleur.pyli.Activies;
 
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import com.blakelafleur.pyli.Fragments.BasicColorSettingFragment;
-import com.blakelafleur.pyli.Fragments.EffectsColorSettingFragment;
+import com.blakelafleur.pyli.Fragments.FadeColorSettingFragment;
 
 /**
  * Created by blake on 2/17/16.
@@ -21,11 +22,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Log.d(MainActivity.TAG, position + "");
         switch(position) {
             case 0:
                 return BasicColorSettingFragment.newInstance();
             case 1:
-                return EffectsColorSettingFragment.newInstance();
+                return FadeColorSettingFragment.newInstance();
             default:
                 return null;
         }

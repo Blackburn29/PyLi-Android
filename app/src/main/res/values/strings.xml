@@ -9,4 +9,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="connections">Connections</string>
+    <string name="leds_label">LED Strips</string>
+    <string name="color_picker_label">Color</string>
+    <string name="speed_label">Speed</string>
 </resources>

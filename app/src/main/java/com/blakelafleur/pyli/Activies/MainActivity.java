@@ -1,29 +1,37 @@
-package com.blakelafleur.pyli;
+package com.blakelafleur.pyli.Activies;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.blakelafleur.pyli.Connections.Connection;
 import com.blakelafleur.pyli.Connections.ConnectionStorage;
-import com.blakelafleur.pyli.Fragments.BasicColorSettingFragment;
+import com.blakelafleur.pyli.Fragments.MainActivityFragmentInteractionListener;
+import com.blakelafleur.pyli.R;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, BasicColorSettingFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, MainActivityFragmentInteractionListener {
 
     public static final String TAG = "PyLi";
     public static final int REQUEST_CODE = 0;
-
-    private ViewPager mViewPager;
+    private static Connection mConnection;
     private static ConnectionStorage mConnections;
+    private ViewPager mViewPager;
+    private Toolbar mToolbar;
+
+    public static Connection getActiveConnection() {
+        return mConnection;
+    }
+
+    public static ConnectionStorage getConnectionStorage() {
+        return mConnections;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +39,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         mConnections = new ConnectionStorage(this.getApplicationContext());
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        this.mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(this.mToolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Basic"));
-        tabLayout.addTab(tabLayout.newTab().setText("Effects"));
+        tabLayout.addTab(tabLayout.newTab().setText("Fade"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         this.mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -44,8 +52,16 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         this.mViewPager.setAdapter(adapter);
         this.mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(this);
+    }
 
-        openConnectionList();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //We require an active connection. If there isn't one, prompt the user to select one.
+        if (null == getActiveConnection()) {
+            openConnectionList();
+        }
     }
 
     private void openConnectionList() {
@@ -61,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     public ArrayList<Connection> getConnections() {
         return mConnections.listConnections();
     }
-
-    public static ConnectionStorage getConnectionStorage() { return mConnections; }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,8 +98,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        String host = intent.getStringExtra("host");
-        Log.d(TAG, "Got "+host+" back from connection helper");
+        if (requestCode == REQUEST_CODE && intent != null) {
+            String host = intent.getStringExtra("host");
+            int id = intent.getIntExtra("connection_id", -1);
+            mConnection = new Connection(id, host);
+            mToolbar.setTitle(host);
+        }
     }
 
     @Override
@@ -102,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentMessage(String TAG, Object data) {
+
     }
 }

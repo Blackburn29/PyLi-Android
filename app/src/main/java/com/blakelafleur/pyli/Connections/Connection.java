@@ -1,4 +1,4 @@
-package com.blakelafleur.pyli;
+package com.blakelafleur.pyli.Connections;
 
 /**
  * Created by blake on 2/17/16.

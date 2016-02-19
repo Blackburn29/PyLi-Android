@@ -5,12 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
-import android.util.Log;
-
-import com.blakelafleur.pyli.Connection;
-import com.blakelafleur.pyli.MainActivity;
 
 import java.util.ArrayList;
 
@@ -18,10 +13,10 @@ import java.util.ArrayList;
  * Created by blake on 2/17/16.
  */
 public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
-    private static final int VERSION = 1;
-    private static final String DATABASE_NAME = "Connections.db";
     public static final String TABLE_NAME = "connections";
     public static final String COLUMN_HOST = "host";
+    private static final int VERSION = 1;
+    private static final String DATABASE_NAME = "Connections.db";
 
     public ConnectionStorage(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
@@ -32,9 +27,13 @@ public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
     public void onCreate(SQLiteDatabase db) {
         String[] columns = {_ID, COLUMN_HOST};
         String[] attr = {"INTEGER PRIMARY KEY", "STRING"};
-            String stmt = this.createTableStatement(TABLE_NAME, columns, attr);
-            Log.d(MainActivity.TAG, stmt);
+        String stmt = null;
+        try {
+            stmt = this.createTableStatement(TABLE_NAME, columns, attr);
             db.execSQL(stmt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -48,7 +47,7 @@ public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
         ContentValues values = new ContentValues();
         values.put(COLUMN_HOST, c.getHost());
 
-        return db.insert(TABLE_NAME, null, values) > 0 ? true : false;
+        return db.insert(TABLE_NAME, null, values) > 0;
     }
 
     public ArrayList<Connection> listConnections() {
@@ -78,12 +77,14 @@ public class ConnectionStorage extends SQLiteOpenHelper implements BaseColumns {
             conn.add(connection);
         } while(c.moveToNext());
 
+        c.close();
+
         return conn;
     }
 
-    private String createTableStatement(String table, String[] columns, String[] attributes) {
+    private String createTableStatement(String table, String[] columns, String[] attributes) throws Exception {
         if (columns.length != attributes.length) {
-            //throw new Exception("Columns and attributes are invalid");
+            throw new Exception("Columns and attributes are invalid");
         }
 
         String sql = "CREATE TABLE " + table + " (";

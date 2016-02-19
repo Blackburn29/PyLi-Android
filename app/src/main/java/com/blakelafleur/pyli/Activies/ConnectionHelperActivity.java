@@ -1,11 +1,11 @@
-package com.blakelafleur.pyli;
+package com.blakelafleur.pyli.Activies;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,8 +16,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.blakelafleur.pyli.Connections.Connection;
+import com.blakelafleur.pyli.Connections.ConnectionListAdapter;
+import com.blakelafleur.pyli.Connections.OnConnectionAddedInterface;
+import com.blakelafleur.pyli.R;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class ConnectionHelperActivity extends AppCompatActivity implements OnConnectionAddedInterface, AdapterView.OnItemClickListener {
@@ -109,6 +113,7 @@ public class ConnectionHelperActivity extends AppCompatActivity implements OnCon
         Connection c = (Connection)parent.getAdapter().getItem(position);
         Intent intent = new Intent();
         intent.putExtra("host", c.getHost());
+        intent.putExtra("connection_id", c.getId());
         setResult(RESULT_CODE, intent);
         finish();
     }

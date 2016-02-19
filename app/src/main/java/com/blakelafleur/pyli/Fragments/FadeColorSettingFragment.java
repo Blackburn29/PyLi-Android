@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.blakelafleur.pyli.Activies.MainActivity;
 import com.blakelafleur.pyli.DataSenders.BasicHttpSender;
-import com.blakelafleur.pyli.Operations.SetOperation;
+import com.blakelafleur.pyli.Operations.FadeOperation;
 import com.blakelafleur.pyli.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
@@ -29,27 +31,29 @@ import com.larswerkman.holocolorpicker.SVBar;
  * Use the {@link BasicColorSettingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BasicColorSettingFragment extends Fragment {
+public class FadeColorSettingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
-    private static final String API_URL = "/set/_basic";
+    private static final String API_URL = "/fade/_basic";
     private MainActivityFragmentInteractionListener mListener;
     private ColorPicker mPicker;
     private BasicHttpSender mHttpSender;
     private String[] ledStripLabels = {"1", "2", "3", "4", "5"};
     private ArrayAdapter<String> ledStripAdapter;
     private GridView ledStripGrid;
+    private SeekBar speedBar;
+    private TextView speedLabel;
 
-    public BasicColorSettingFragment() {
+    public FadeColorSettingFragment() {
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment BasicColorSettingFragment.
+     * @return A new instance of fragment FadeColorSettingFragment.
      */
-    public static BasicColorSettingFragment newInstance() {
-        BasicColorSettingFragment fragment = new BasicColorSettingFragment();
+    public static FadeColorSettingFragment newInstance() {
+        FadeColorSettingFragment fragment = new FadeColorSettingFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -87,14 +91,15 @@ public class BasicColorSettingFragment extends Fragment {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
         SparseBooleanArray checkedBoxes = ledStripGrid.getCheckedItemPositions();
-        for (int i = 0; i < checkedBoxes.size(); i++) {
+        for (int i = 0; i < ledStripAdapter.getCount(); i++) {
             if (!checkedBoxes.get(i)) {
                 continue;
             }
             int pos = ledStripAdapter.getPosition(ledStripLabels[i]);
 
-            Log.d(MainActivity.TAG, pos + " was checked!");
-            SetOperation op = new SetOperation(pos, hsv[0], hsv[1], hsv[2]);
+            float speed = getSpeed(speedBar.getProgress());
+
+            FadeOperation op = new FadeOperation(pos, speed, hsv[0], hsv[1], hsv[2]);
             Log.d(MainActivity.TAG, op.toJSON().toString());
             new BasicHttpSender(view).send(String.format("http://%s%s", MainActivity.getActiveConnection().getHost(), API_URL), op.toJSON());
         }
@@ -109,9 +114,14 @@ public class BasicColorSettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_basic_color_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_fade_color_setting, container, false);
         renderCheckboxes(view);
         initColorPicker(view);
+
+        speedLabel = (TextView) view.findViewById(R.id.speed_label);
+        speedBar = (SeekBar) view.findViewById(R.id.speed_bar);
+        speedBar.setOnSeekBarChangeListener(this);
+        speedBar.setProgress(speedBar.getMax() / 2);
         return view;
     }
 
@@ -130,6 +140,25 @@ public class BasicColorSettingFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        speedLabel.setText(String.format("%ss", getSpeed(progress)));
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    private float getSpeed(int value) {
+        return ((float) value / (float) 500);
     }
 
     /**
