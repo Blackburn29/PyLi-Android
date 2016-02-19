@@ -6,10 +6,10 @@ import org.json.JSONObject;
 /**
  * Created by blake on 2/18/16.
  */
-public class FadeOperation extends SetOperation {
+public class BlinkOperation extends SetOperation {
     float speed;
 
-    public FadeOperation(int light, float speed, float h, float s, float v) {
+    public BlinkOperation(int light, float speed, float h, float s, float v) {
         super(light, h, s, v);
         this.speed = speed;
     }

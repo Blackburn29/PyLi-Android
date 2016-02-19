@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.blakelafleur.pyli.Activies.MainActivity;
 import com.blakelafleur.pyli.DataSenders.BasicHttpSender;
-import com.blakelafleur.pyli.Operations.FadeOperation;
+import com.blakelafleur.pyli.Operations.BlinkOperation;
 import com.blakelafleur.pyli.R;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
@@ -31,9 +31,9 @@ import com.larswerkman.holocolorpicker.SVBar;
  * Use the {@link BasicColorSettingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FadeColorSettingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class BlinkColorSettingFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
-    private static final String API_URL = "/fade/_basic";
+    private static final String API_URL = "/blink/_basic";
     private MainActivityFragmentInteractionListener mListener;
     private ColorPicker mPicker;
     private BasicHttpSender mHttpSender;
@@ -43,17 +43,17 @@ public class FadeColorSettingFragment extends Fragment implements SeekBar.OnSeek
     private SeekBar speedBar;
     private TextView speedLabel;
 
-    public FadeColorSettingFragment() {
+    public BlinkColorSettingFragment() {
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment FadeColorSettingFragment.
+     * @return A new instance of fragment BlinkColorSettingFragment.
      */
-    public static FadeColorSettingFragment newInstance() {
-        FadeColorSettingFragment fragment = new FadeColorSettingFragment();
+    public static BlinkColorSettingFragment newInstance() {
+        BlinkColorSettingFragment fragment = new BlinkColorSettingFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -99,7 +99,7 @@ public class FadeColorSettingFragment extends Fragment implements SeekBar.OnSeek
 
             float speed = getSpeed(speedBar.getProgress());
 
-            FadeOperation op = new FadeOperation(pos, speed, hsv[0], hsv[1], hsv[2]);
+            BlinkOperation op = new BlinkOperation(pos, speed, hsv[0], hsv[1], hsv[2]);
             Log.d(MainActivity.TAG, op.toJSON().toString());
             new BasicHttpSender(view).send(String.format("http://%s%s", MainActivity.getActiveConnection().getHost(), API_URL), op.toJSON());
         }

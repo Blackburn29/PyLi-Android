@@ -21,6 +21,8 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.OpacityBar;
 import com.larswerkman.holocolorpicker.SVBar;
 
+import java.util.Arrays;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -29,7 +31,7 @@ import com.larswerkman.holocolorpicker.SVBar;
  * Use the {@link BasicColorSettingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BasicColorSettingFragment extends Fragment {
+public class BasicColorSettingFragment extends Fragment implements PageFragmentInterface {
 
     private static final String API_URL = "/set/_basic";
     private MainActivityFragmentInteractionListener mListener;
@@ -75,9 +77,9 @@ public class BasicColorSettingFragment extends Fragment {
         mPicker.setShowOldCenterColor(false);
         mPicker.addSVBar(svBar);
         mPicker.addOpacityBar(opacityBar);
-        mPicker.setOnColorChangedListener(new DebouncedOnColorChangedListener(view, 100) {
+        mPicker.setOnColorSelectedListener(new ColorPicker.OnColorSelectedListener() {
             @Override
-            public void onDebouncedClick(int color) {
+            public void onColorSelected(int color) {
                 sendColor(view, color);
             }
         });
@@ -93,7 +95,7 @@ public class BasicColorSettingFragment extends Fragment {
             }
             int pos = ledStripAdapter.getPosition(ledStripLabels[i]);
 
-            Log.d(MainActivity.TAG, pos + " was checked!");
+            Log.d(MainActivity.TAG, Arrays.toString(hsv));
             SetOperation op = new SetOperation(pos, hsv[0], hsv[1], hsv[2]);
             Log.d(MainActivity.TAG, op.toJSON().toString());
             new BasicHttpSender(view).send(String.format("http://%s%s", MainActivity.getActiveConnection().getHost(), API_URL), op.toJSON());
@@ -137,10 +139,6 @@ public class BasicColorSettingFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);

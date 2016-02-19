@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Basic"));
         tabLayout.addTab(tabLayout.newTab().setText("Fade"));
+        tabLayout.addTab(tabLayout.newTab().setText("Blink"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         this.mViewPager = (ViewPager) findViewById(R.id.pager);
