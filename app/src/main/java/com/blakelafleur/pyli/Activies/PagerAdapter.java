@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.blakelafleur.pyli.Fragments.BasicColorSettingFragment;
 import com.blakelafleur.pyli.Fragments.BlinkColorSettingFragment;
+import com.blakelafleur.pyli.Fragments.ExtraColorSettingsFragment;
 import com.blakelafleur.pyli.Fragments.FadeColorSettingFragment;
 
 /**
@@ -18,7 +19,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     private Class[] fragments = {
             BasicColorSettingFragment.class,
             FadeColorSettingFragment.class,
-            BlinkColorSettingFragment.class
+            BlinkColorSettingFragment.class,
+            ExtraColorSettingsFragment.class
     };
 
     public PagerAdapter(FragmentManager manager) {
