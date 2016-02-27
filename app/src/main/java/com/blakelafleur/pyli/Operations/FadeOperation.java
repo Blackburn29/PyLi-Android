@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by blake on 2/18/16.
  */
-public class FadeOperation extends SetOperation {
+public class FadeOperation extends SetOperation implements OperationInterface {
     float speed;
 
     public FadeOperation(int light, float speed, float h, float s, float v) {

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by blake on 2/18/16.
  */
-public class SetOperation {
+public class SetOperation implements OperationInterface {
     private int light;
     private float h, s, v;
 
